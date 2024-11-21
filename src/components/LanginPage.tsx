@@ -1,11 +1,9 @@
-'use client';
+"use client";
+import { motion } from "framer-motion";
+import { Dispatch, SetStateAction } from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
 import Header from "./header";
-import {
-  ArrowRight,
-  Bot,
-  Code,
-  VenetianMask,
-} from "lucide-react";
+import { ArrowRight, Bot, Code, VenetianMask } from "lucide-react";
 import { SmoothScrollHero } from "./parallax-section";
 import { ShuffleGrid } from "./try-section";
 import Image from "next/image";
@@ -13,38 +11,59 @@ import { useState } from "react";
 import Link from "next/link";
 
 const LandingPage = () => {
+  const [selected, setSelected] = useState<ToggleOptionsType>("small");
+  const [selectedTransparency, setSelectedTransparency] =
+    useState<ToggleOptionsType>("small");
 
-   const [imageUrl, setImageUrl] = useState<string | null>(null);
-   const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-   // Function to fetch the generated image
-   const fetchGeneratedImage = async () => {
-     setLoading(true);
-     try {
-       const baseurl =
-         localStorage.getItem("url") ||
-         "https://cc86-104-155-238-132.ngrok-free.app";
-       console.log("baseurl", baseurl);
-       const response = await fetch(baseurl + "/generate-image", {
-         method: "get",
-         headers: new Headers({
-           "ngrok-skip-browser-warning": "69420",
-         }),
-       });
-       if (!response.ok) {
-         throw new Error("Failed to fetch image");
-       }
-       // Get the image as a blob
-       const blob = await response.blob();
-       // Create a URL for the blob and update state
-       const url = URL.createObjectURL(blob);
-       setImageUrl(url);
-     } catch (error) {
-       console.error("Error fetching the image:", error);
-     } finally {
-       setLoading(false);
-     }
-   };
+  // Function to fetch the generated image
+  const fetchGeneratedImage = async () => {
+    setLoading(true);
+    try {
+      const baseurl =
+        localStorage.getItem("url") + "/generate-image" ||
+        "https://cc86-104-155-238-132.ngrok-free.app" + "/generate-image";
+
+      let newurl = baseurl;
+      if (selectedTransparency === "large") {
+        if (newurl === baseurl) {
+          newurl += "?transparent=true";
+        } else {
+          newurl += "&transparent=true";
+        }
+      }
+
+      if (selected === "large") {
+        if (newurl === baseurl) {
+          newurl += "?size=large";
+        } else {
+          newurl += "&size=large";
+        }
+      }
+
+      console.log("baseurl: ", newurl);
+      const response = await fetch(newurl, {
+        method: "get",
+        headers: new Headers({
+          "ngrok-skip-browser-warning": "69420",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+      // Get the image as a blob
+      const blob = await response.blob();
+      // Create a URL for the blob and update state
+      const url = URL.createObjectURL(blob);
+      setImageUrl(url);
+    } catch (error) {
+      console.error("Error fetching the image:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="relative flex h-full min-h-screen flex-col items-center pt-16 px-3 gap-8 lg:px-5">
@@ -64,11 +83,14 @@ const LandingPage = () => {
 
           <ArrowRight className="text-black transition-all duration-500 ease-in-out group-hover:-translate-x-1 ml-auto" />
         </a>
-        <button onClick={() => {
-          document.getElementById("try")?.scrollIntoView({
-            behavior: "smooth",
-          });
-        }} className="bg-accent flex items-center  transition-all h-16 sm:h-20 md:h-20 lg:h-20 gap-2 group lg:gap-4 pr-3 sm:pr-4 rounded-lg relative group/banner p-4 cursor-pointer hover:opacity-95 text-white">
+        <button
+          onClick={() => {
+            document.getElementById("try")?.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
+          className="bg-accent flex items-center  transition-all h-16 sm:h-20 md:h-20 lg:h-20 gap-2 group lg:gap-4 pr-3 sm:pr-4 rounded-lg relative group/banner p-4 cursor-pointer hover:opacity-95 text-white"
+        >
           <Bot className="text-white" />
           <div className="text-left">
             <h2 className="font-semibold ">Try it Yourself!</h2>
@@ -104,12 +126,36 @@ const LandingPage = () => {
               cutting-edge API. Perfect for apps, games, or just adding a
               personal touch to your digital presence.
             </p>
-            <button onClick={fetchGeneratedImage} disabled={loading} className="bg-accent text-white font-medium py-2 px-4 transition-all hover:bg-black duration-500 flex gap-x-2 items-center justify-center active:scale-95">
+            <button
+              onClick={fetchGeneratedImage}
+              disabled={loading}
+              className="bg-accent text-white font-medium py-2 px-4 transition-all hover:bg-black duration-500 flex gap-x-2 items-center justify-center active:scale-95"
+            >
               <VenetianMask className="text-white" />
-              {loading && <span>Generating...</span>
-              }
+              {loading && <span>Generating...</span>}
               {!loading && <span>Generate a Unique Avatar</span>}
             </button>
+            <div className="grid grid-cols-2">
+              <div
+                className={`flex py-4 justify-start items-center gap-x-2 transition-colors ${
+                  selected === "small" ? "" : ""
+                }`}
+              >
+                <div className="inline">Transparency:</div>
+                <SliderToggleTransparency
+                  selected={selectedTransparency}
+                  setSelected={setSelectedTransparency}
+                />
+              </div>
+              <div
+                className={`flex py-4 justify-start items-center gap-x-2 transition-colors ${
+                  selected === "small" ? "" : ""
+                }`}
+              >
+                <div className="inline">Image Size:</div>
+                <SliderToggle selected={selected} setSelected={setSelected} />
+              </div>
+            </div>
           </div>
           <CardPulseBorder image={imageUrl || ""} />
         </div>
@@ -168,7 +214,7 @@ const LandingPage = () => {
   );
 };
 
-const CardPulseBorder = ({image} : {image: string}) => {
+const CardPulseBorder = ({ image }: { image: string }) => {
   return (
     <div className="relative mx-auto h-48 w-48">
       <div className="absolute top-0 flex w-full justify-center">
@@ -182,14 +228,117 @@ const CardPulseBorder = ({image} : {image: string}) => {
           alt="Avatar"
           className="rounded-lg h-full w-full object-cover"
         />
-      ): (
+      ) : (
         <div className="h-full w-full border flex justify-center items-center border-gray-300">
-          <p className="text-sm text-gray-500 text-center">Click on Generate Avatar Button</p>
+          <p className="text-sm text-gray-500 text-center">
+            Click on Generate Avatar Button
+          </p>
         </div>
       )}
     </div>
   );
 };
 
+const TOGGLE_CLASSES =
+  "text-sm font-medium flex items-center gap-2 px-3 md:pl-3 md:pr-3.5 py-3 md:py-1.5 transition-colors relative z-10";
+
+type ToggleOptionsType = "small" | "large";
+type ToggleOptionsTransparency = "small" | "large";
+
+const SliderToggle = ({
+  selected,
+
+  setSelected,
+}: {
+  selected: ToggleOptionsType;
+
+  setSelected: Dispatch<SetStateAction<ToggleOptionsType>>;
+}) => {
+  return (
+    <div className="relative flex w-fit items-center rounded-full">
+      <button
+        className={`${TOGGLE_CLASSES} ${
+          selected === "small" ? "text-white" : "text-black"
+        }`}
+        onClick={() => {
+          setSelected("small");
+        }}
+      >
+        <span className="relative z-10">Small</span>
+      </button>
+
+      <button
+        className={`${TOGGLE_CLASSES} ${
+          selected === "large" ? "text-white" : "text-slate-800"
+        }`}
+        onClick={() => {
+          setSelected("large");
+        }}
+      >
+        <span className="relative z-10">Large</span>
+      </button>
+
+      <div
+        className={`absolute inset-0 z-0 flex ${
+          selected === "large" ? "justify-end" : "justify-start"
+        }`}
+      >
+        <motion.span
+          layout
+          transition={{ type: "spring", damping: 15, stiffness: 250 }}
+          className="h-full w-1/2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600"
+        />
+      </div>
+    </div>
+  );
+};
+
+const SliderToggleTransparency = ({
+  selected,
+
+  setSelected,
+}: {
+  selected: ToggleOptionsType;
+
+  setSelected: Dispatch<SetStateAction<ToggleOptionsType>>;
+}) => {
+  return (
+    <div className="relative flex w-fit items-center rounded-full">
+      <button
+        className={`${TOGGLE_CLASSES} ${
+          selected === "small" ? "text-white" : "text-black"
+        }`}
+        onClick={() => {
+          setSelected("small");
+        }}
+      >
+        <span className="relative z-10">Off</span>
+      </button>
+
+      <button
+        className={`${TOGGLE_CLASSES} ${
+          selected === "large" ? "text-white" : "text-slate-800"
+        }`}
+        onClick={() => {
+          setSelected("large");
+        }}
+      >
+        <span className="relative z-10">On</span>
+      </button>
+
+      <div
+        className={`absolute inset-0 z-0 flex ${
+          selected === "large" ? "justify-end" : "justify-start"
+        }`}
+      >
+        <motion.span
+          layout
+          transition={{ type: "spring", damping: 15, stiffness: 250 }}
+          className="h-full w-1/2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600"
+        />
+      </div>
+    </div>
+  );
+};
 
 export default LandingPage;
