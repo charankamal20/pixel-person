@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 
 const Header = () => {
   return (
@@ -6,8 +7,12 @@ const Header = () => {
         no more boring avatars
       </h1>
       <p className="text-body text-neutral-300 md:text-lead text-xl">
-        The best free stock and royalty free avatars. Powered by <span className='text-accent'>AI</span>{" "}
-        everywhere.
+        The best free stock and royalty free avatars. Powered by{" "}
+        <span className="text-accent">AI</span> everywhere.
+        <span className="text-neutral-400 pl-2">
+          Scroll{" "}
+        </span>
+        <ChevronDown className="inline text-neutral-400 animate-bounce" />
       </p>
     </div>
   );
