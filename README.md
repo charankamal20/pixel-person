@@ -5,6 +5,10 @@
 </h2>Avatar Generation API is a modern, lightweight service that generates cartoon avatars using deep learning models. It supports various features like configurable image sizes and transparent backgrounds. Designed for seamless integration, this API provides an efficient way to create unique avatars for games, profiles, or digital art.
 
 - - -
+# **Visit the Project on** 
+<a href="https://pixelperson.classikh.me" target="_blank"><i>pixelperson.classikh.me</i></a>
+
+- - -
 
 <h2>Features
 </h2><ul><li>Generate high-quality cartoon avatars.</li><li>Supports multiple resolutions: <code>96x96</code> (small) and <code>128x128</code> (large).</li><li>Transparent background support for flexible usage.</li><li>RESTful API powered by FastAPI for easy integration.</li><li>Deployed using <code>ngrok</code> for accessible endpoints.</li></ul>
