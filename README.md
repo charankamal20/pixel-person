@@ -65,27 +65,6 @@ Returns the generated image as a <code>.png</code> file.
 
 - - -
 
-<h2>Usage Instructions
-</h2><h3>Setup
-</h3><ol><li>Clone this repository:
-<code class="!overflow-visible" data-te-codeblock="">bash
-
-git clone https://github.com/<username>/avatar-generation-api.git
-cd avatar-generation-api</username></code></li><li>Install dependencies:
-<code class="!overflow-visible" data-te-codeblock="">bash
-
-pip install -r requirements.txt</code></li><li>Download the trained models and place them in the <code>/kaggle/working/</code> directory:
-<ul><li>Small model: <code>face_generator_96.h5</code></li><li>Large model: <code>face_generator_128.h5</code></li></ul></li><li>Run the server:
-<code class="!overflow-visible" data-te-codeblock="">bash
-
-python main.py</code></li><li>Start an <code>ngrok</code> tunnel:
-<code class="!overflow-visible" data-te-codeblock="">bash
-
-ngrok http 12000</code></li><li>Access the API using the provided ngrok URL.
-</li></ol>
-
-- - -
-
 <ul><li>Performance:<ul><li>Average latency per request: \~50ms (depends on hardware).</li><li>High-quality results with minimal artifacts.</li></ul></li></ul>
 
 - - -
