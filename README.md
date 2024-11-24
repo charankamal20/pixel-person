@@ -1,6 +1,6 @@
 - - -
 
-<h1>Avatar Generation API
+<h1>PixelPerson
 </h1><h2>Overview
 </h2>Avatar Generation API is a modern, lightweight service that generates cartoon avatars using deep learning models. It supports various features like configurable image sizes and transparent backgrounds. Designed for seamless integration, this API provides an efficient way to create unique avatars for games, profiles, or digital art.
 
